@@ -53,5 +53,6 @@ def parse_arguments(argv):
         help='Prints dataset statistics.', action='store_true')
     return parser.parse_args(argv)
 
+# Sample execution: python preprocess_utk.py ../utk_preprocessed/raw/ --print_stats
 if __name__ == '__main__':
     main(parse_arguments(sys.argv[1:]))
