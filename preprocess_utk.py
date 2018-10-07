@@ -27,7 +27,8 @@ def main(args):
         img_new_path = os.path.join(args.utk_raw_dir, img_name.split(".")[0])
         if not os.path.exists(img_new_path):
             os.makedirs(img_new_path)
-        os.rename(img_path, os.path.join(img_new_path, img_name))
+        new_img_name = "{0}.jpg".format(img_name.split(".")[0])
+        os.rename(img_path, os.path.join(img_new_path, new_img_name))
 
         # update stats
         dataset_size = dataset_size + 1
