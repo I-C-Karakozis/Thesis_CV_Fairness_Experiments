@@ -97,7 +97,7 @@ def parse_arguments(argv):
         help='Prints dataset statistics.', action='store_true')
     return parser.parse_args(argv)
 
-# Sample execution: python produce_utk_pairs.py ../utk_preprocessed/raw/ utk_pairs.txt
-# python produce_utk_pairs.py ../datasets/utk_preprocessed/utk_mtcnnpy_160/ ../facenet/data/utk_pairs.txt
+# Sample execution: python produce_utk_pairs.py ../datasets/utk_preprocessed/raw/ utk_pairs.txt
+# python produce_utk_pairs.py ../datasets/utk_preprocessed/raw/ ../facenet/data/utk_pairs.txt
 if __name__ == '__main__':
     main(parse_arguments(sys.argv[1:]))
