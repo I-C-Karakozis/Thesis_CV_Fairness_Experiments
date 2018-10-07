@@ -10,7 +10,7 @@ def remove(img_path, cause):
     print(cause, img_path, "removed!")
     os.remove(img_path)
 
-def validate(img_name, img_path):
+def validate(img, img_name, img_path):
     # validate file name
     img_name_split = img_name.split("_")
     if len(img_name_split) != 4: 
@@ -18,7 +18,6 @@ def validate(img_name, img_path):
         return False
 
     # validate size
-    img = cv2.imread(img_path)
     img_shape = img.shape
     if img_shape[0] != UTK_CROP_SIZE or img_shape[1] != UTK_CROP_SIZE:
         remove(img_path, "Bad crop size:")
@@ -37,8 +36,9 @@ def main(args):
 
     for img_name in os.listdir(args.utk_raw_dir):
         img_path = os.path.join(args.utk_raw_dir, img_name) 
+        img = cv2.imread(img_path)
 
-        if validate(img_name, img_path):
+        if validate(img, img_name, img_path):
             # store image in its own identity directory
             new_dir = img_name.split(".")[0].strip()
             img_new_path = os.path.join(args.utk_raw_dir, new_dir)
@@ -46,6 +46,12 @@ def main(args):
                 os.makedirs(img_new_path)
             new_img_name = "{0}.jpg".format(new_dir)
             os.rename(img_path, os.path.join(img_new_path, new_img_name))
+
+            # resize image
+            if args.resize != UTK_CROP_SIZE:
+                resized_img = cv2.resize(img, dsize=(args.resize, args.resize), 
+                                         interpolation=cv2.INTER_CUBIC)
+                cv2.imwrite(os.path.join(img_new_path, new_img_name), resized_img)
 
             # update stats
             dataset_size = dataset_size + 1
@@ -69,6 +75,8 @@ def parse_arguments(argv):
         help='Path to the data directory containing UTK face patches.')
     parser.add_argument('--print_stats',
         help='Prints dataset statistics.', action='store_true')
+    parser.add_argument('--resize', type=int,
+        help='Side size of square crop to rescale the image to.', default=160)
     return parser.parse_args(argv)
 
 # Sample execution: python preprocess_utk.py ../utk_preprocessed/raw/ --print_stats
