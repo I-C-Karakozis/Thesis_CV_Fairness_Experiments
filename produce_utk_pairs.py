@@ -24,6 +24,8 @@ def main(args):
 
     # fetch subdirectories
     subdirectories = [child[0].split("/")[-1] for child in os.walk(args.utk_dir)][1:]
+    age_restrictions = range(args.min_age, args.max_age)
+    subdirectories = [sub for sub in subdirectories if int(sub.split("_")[0]) in age_restrictions]
 
     # group examples according to input
     if args.group_by_gender:
@@ -92,12 +94,16 @@ def parse_arguments(argv):
     parser.add_argument('--print_stats',
         help='Prints dataset statistics.', action='store_true')
     parser.add_argument('--group_by_gender',
-        help='Prints dataset statistics.', action='store_true')
+        help='Generate samples within the same gender group.', action='store_true')
     parser.add_argument('--group_by_race',
-        help='Prints dataset statistics.', action='store_true')
+        help='Generate samples within the same gender group.', action='store_true')
+    parser.add_argument('--min_age', type=int,
+        help='Minimum age for image to be used in sample generation.', default=20)
+    parser.add_argument('--max_age', type=int,
+        help='Maximum age for image to be used in sample generation.', default=50)
     return parser.parse_args(argv)
 
-# Sample execution: python produce_utk_pairs.py ../datasets/utk_preprocessed/raw/ utk_pairs.txt
+# Sample execution: python produce_utk_pairs.py ../utk_preprocessed/raw/ utk_pairs.txt
 # python produce_utk_pairs.py ../datasets/utk_preprocessed/raw/ ../facenet/data/utk_pairs.txt
 if __name__ == '__main__':
     main(parse_arguments(sys.argv[1:]))
